@@ -1,5 +1,14 @@
-var cart = require('./cart.page.js');
+//Before implementing POM but still usiong objects
 describe("Cart Functionality", function () {
+  var btn = "#buyNowButton";
+  var qty = "#qty";
+
+  var cart = {
+    get btn() { return $(btn); }, //Returns first occurance of element
+    get qty() { return $(qty); },
+    get thankYou() { return $(".callout*=Thank you human"); }
+  }
+
   beforeEach(function () {
     browser.url("/product-page.html");
   });
