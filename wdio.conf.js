@@ -9,7 +9,21 @@ if (process.env.SERVER === "prod") {
 var timeout = process.env.DEBUG ? 99999999 : 10000;
 
 exports.config = {
+/* 
+    //Saucelabs
+    //Credentials to connect to saucelabs. Webdriverio picks this up automatically
+    //Also install : npm install wdio-sauce-service --save-dev
+    user: process.env.SAUCE_USERNAME,
+    key: process.env.SAUCE_ACCESS_KEY,
+    sauceConnect: true,
+
+    //Browserstack
+    //Also install : npm install wdio-browserstack-service --save-dev
+    user: process.env.BROWSERSTACK_USERNAME,
+    key: process.env.BROWSERSTACK_ACCESS_KEY,
+    browserstackLocal: true,
     
+*/    
     //
     // ==================
     // Specify Test Files
@@ -58,6 +72,7 @@ exports.config = {
         maxInstances: 1,
         //
         browserName: 'chrome'
+        //'browserstack.local' : true
     }],
     //
     // ===================
@@ -124,7 +139,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['selenium-standalone'],//
+    services: ['selenium-standalone'],// , 'sauce', 'browserstack'
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: http://webdriver.io/guide/testrunner/frameworks.html
