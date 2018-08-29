@@ -1,3 +1,6 @@
+var VisualRegressionCompare = require('wdio-visual-regression-service/compare');
+var path = require('path');
+
 var notifier = require('node-notifier');
 
 var baseUrl = 'http://127.0.0.1:8303';
@@ -7,6 +10,18 @@ if (process.env.SERVER === "prod") {
 }
 
 var timeout = process.env.DEBUG ? 99999999 : 10000;
+
+function getScreenshotName(folder, context){
+    var type = context.type;
+    var testName = context.test.title;
+    var browserVersion = parseInt(context.browser.version, 10);
+    var browserName = context.browser.name;
+    var browserViewport = context.meta.viewport;
+    var browserWidth = browserViewport.width;
+    var browserHeight = browserViewport.height;
+
+    return path.join(process.cwd(), folder, `${testName}_${type}_${browserName}_v${browserVersion}_${browserWidth}x${browserHeight}.png`)
+}
 
 exports.config = {
 /* 
@@ -139,7 +154,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['selenium-standalone'],// , 'sauce', 'browserstack'
+    services: ['selenium-standalone', 'visual-regression'],// , 'sauce', 'browserstack'
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: http://webdriver.io/guide/testrunner/frameworks.html
@@ -159,6 +174,13 @@ exports.config = {
         ui: 'bdd',
         timeout: timeout
     },
+    visualRegression: {
+        compare: new VisualRegressionCompare.LocalCompare({
+            referenceName: getScreenshotName.bind(null, 'screenshots/baseline'),
+            screenshotName: getScreenshotName.bind(null, 'screenshots/latest'),
+            diffName: getScreenshotName.bind(null, 'screenshots/diff')
+    }),
+},
     //
     // =====
     // Hooks
